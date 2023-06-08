@@ -1,6 +1,7 @@
 const std = @import("std");
+const glfw = @import("libs/mach-glfw/build.zig");
 
-pub fn build(b: *std.Build) void {
+pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
@@ -10,6 +11,9 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
+
+    exe.addModule("glfw", glfw.module(b));
+    try glfw.link(b, exe, .{});
 
     b.installArtifact(exe);
 
