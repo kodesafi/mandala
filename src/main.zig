@@ -11,6 +11,21 @@ const TITLE = "wgpu shader toy";
 
 pub const GPUInterface = gpu.dawn.Interface;
 
+const SurfaceData = struct {
+    const Self = @This();
+
+    surface: ?*gpu.Surface,
+    swap_chain: ?*gpu.SwapChain,
+    current_desc: gpu.SwapChain.Descriptor,
+    target_desc: gpu.SwapChain.Descriptor,
+};
+
+const RequestAdapterResponse = struct {
+    status: gpu.RequestAdapterStatus,
+    adapter: *gpu.Adapter,
+    message: ?[*:0]const u8,
+};
+
 pub fn main() !void {
     gpu.Impl.init();
 
@@ -229,6 +244,10 @@ pub fn main() !void {
     }
 }
 
+fn errorCallback(code: glfw.ErrorCode, desc: [:0]const u8) void {
+    log.err("GLFW Error [{}] : {s}\n", .{ code, desc });
+}
+
 fn handleResize(win: glfw.Window, width: u32, height: u32) void {
     const pl = win.getUserPointer(SurfaceData);
     pl.?.target_desc.width = width;
@@ -246,10 +265,6 @@ fn handleKeyPress(
     _ = mods;
     _ = action;
     _ = scancode;
-}
-
-fn errorCallback(code: glfw.ErrorCode, desc: [:0]const u8) void {
-    log.err("GLFW Error [{}] : {s}\n", .{ code, desc });
 }
 
 inline fn requestAdapterCallback(
@@ -279,18 +294,3 @@ inline fn printUnhandledErrorCallback(
     }
     ps.exit(1);
 }
-
-const SurfaceData = struct {
-    const Self = @This();
-
-    surface: ?*gpu.Surface,
-    swap_chain: ?*gpu.SwapChain,
-    current_desc: gpu.SwapChain.Descriptor,
-    target_desc: gpu.SwapChain.Descriptor,
-};
-
-const RequestAdapterResponse = struct {
-    status: gpu.RequestAdapterStatus,
-    adapter: *gpu.Adapter,
-    message: ?[*:0]const u8,
-};
