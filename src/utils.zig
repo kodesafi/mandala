@@ -15,6 +15,8 @@ pub const Context = struct {
     device: *gpu.Device,
     queue: *gpu.Queue,
     swap_chain: *gpu.SwapChain,
+    width: f32,
+    height: f32,
 };
 
 pub const Setup = struct {
@@ -50,12 +52,14 @@ pub const Setup = struct {
             .device = self.device,
             .queue = self.queue,
             .swap_chain = self.swap_chain,
+            .width = @intToFloat(f32, size.width),
+            .height = @intToFloat(f32, size.height),
         };
     }
 
     pub fn deinit(self: *Self) void {
-        glfw.terminate();
         self.window.destroy();
+        glfw.terminate();
     }
 };
 
