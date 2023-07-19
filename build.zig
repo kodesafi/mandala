@@ -24,7 +24,7 @@ pub fn build(b: *std.Build) !void {
     };
 
     const exe = b.addExecutable(.{
-        .name = "shawig",
+        .name = "mandala",
         .root_source_file = .{ .path = "src/main.zig" },
         .target = target,
         .optimize = optimize,
